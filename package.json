@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "comp-wrap": "^1.1.1"
+    "comp-wrap": "^1.2.0"
   }
 }

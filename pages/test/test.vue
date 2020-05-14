@@ -5,11 +5,6 @@
 		<view class="intro">1. 本项目已包含uni ui组件，无需import和注册，可直接使用。</view>
 		<view class="intro">2. 在代码区键入字母u，即可通过代码助手列出所有可用组件。</view>
 		<view class="intro">3. 光标置于组件名称处按F1，即可查看组件文档。</view>
-		<view>
-			<w-input :label="labelNumber" v-model.trim="modelNumber" maxlength="11" type="number" placeholder="测试Number length"></w-input>
-			<w-button :disabled="disabled" @click.native="bindClick()">测试</w-button>
-			<w-count-down :countDown="5" @click="handClick()"></w-count-down>
-		</view>
 		<uni-link :href="href" :text="text"></uni-link>
 		<view>uniBadge '@dcloudio/uni-ui/lib/uni-badge/uni-badge.vue' 数字角标</view>
 		<view>uniCalendar '@dcloudio/uni-ui/lib/uni-calendar/uni-calendar.vue' 日历</view>
@@ -48,21 +43,12 @@
 export default {
 	data() {
 		return {
-			labelNumber: '测试数字',
-			modelNumber: '18702906728',
-			disabled: false,
 			text: 'uni-ui 已支持的组件列表',
 			href: 'https://ext.dcloud.net.cn/plugin?id=55',
 			image: '/static/components.png'
 		};
 	},
-	methods: {
-		bindClick() {
-			console.log(this.modelNumber);
-			this.disabled = true;
-		},
-		handClick() {}
-	}
+	methods: {}
 };
 </script>
 

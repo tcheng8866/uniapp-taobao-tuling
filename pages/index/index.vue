@@ -83,7 +83,7 @@ export default {
 	height: 100%;
 	background: #fafafa; //灰色
 	font-size: 14px;
-	text-align: center;
+	text-align: left;
 	vertical-align: middle;
 	word-wrap: break-word;
 	.wrap {

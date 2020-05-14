@@ -55,7 +55,7 @@ export default {
 				uni.request({
 					url: 'http://v.juhe.cn/joke/content/list.php',
 					data: {
-						key: '1bd50f1ee7e58f2e76eb39cf20618fbda',
+						key: 'bd50f1ee7e58f2e76eb39cf20618fbda',
 						page: 1,
 						pagesize: 1,
 						sort: 'desc1',

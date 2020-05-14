@@ -1,15 +1,13 @@
 {
 	"pages": [
 		{
-			"path": "pages/test/test",
-			"style": {
-				"navigationBarTitleText": "test 页面"
-			}
-		},
-		 {
 			"path": "pages/index/index"
-		 }
-    ],
+		}, {
+			"path": "pages/test/test"
+		}, {
+			"path": "pages/demo/demo"
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uniapp-prj",

@@ -60,8 +60,12 @@
 			
 			<!-- 加载更多：loading 的状态，可选值：more（loading前）、loading（loading中）、noMore（没有更多了） -->
 			<uni-load-more status="loading"></uni-load-more>
+			
 			<!-- 导航：系统默认就有返回导航 -->
 			<uni-nav-bar left-icon="back" left-text="返回" right-text="菜单" title="导航栏组件"></uni-nav-bar>
+			
+			<!-- 通告栏：滚动时为单行；可现实喇叭图标、可显示关闭并关闭 -->
+			<uni-notice-bar scrollable="true" single="true" showIcon="true" showClose="true" text="[单行] 这是 NoticeBar 通告栏，这是 NoticeBar 通告栏，这是 NoticeBar 通告栏"></uni-notice-bar>
 		
 			<!-- 文本相关 -->
 			<!-- 标题:  -->

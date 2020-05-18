@@ -9,7 +9,7 @@
 		<navigator url="../test/test" open-type="navigate">
 			<button>uni-app组件名称</button>
 		</navigator>
-		<navigator url="../demo/demo" open-type="navigate">
+		<navigator url="../uni-ui/uni-ui" open-type="navigate">
 			<button>uni-app组件示例</button>
 		</navigator>
 	</view>

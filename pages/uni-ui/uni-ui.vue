@@ -2,14 +2,32 @@
 	<view class="page">
 		<view class="wrap">
 			<!-- 组件参考：https://ext.dcloud.net.cn/plugin?id=55 -->
-
+			<!-- 加冒号的，说明后面的是一个变量或者表达式；没加冒号的后面就是对应的字符串字面量(所以props用number接收会报错)！ -->
+			
+			<!-- 导航栏：系统默认就有返回导航 -->
+			<uni-nav-bar left-icon="back" left-text="返回" @clickLeft="consoleLog($event)" right-text="菜单" @clickRight="consoleLog($event)" title="导航栏组件" :fixed="true"></uni-nav-bar>
+			<!-- 通告栏：滚动时为单行；可现实喇叭图标、可显示关闭并关闭 -->
+			<uni-notice-bar scrollable="true" single="true" showIcon="true" showClose="true" text="这是 NoticeBar 通告栏，这是 NoticeBar 通告栏，这是 NoticeBar 通告栏"></uni-notice-bar>
+			<!-- 搜索栏: @input  @confirm; 不建议处理padding:8px;-->
+			<uni-search-bar @input="consoleLog($event)"></uni-search-bar>
+			<!-- 分段器 style-type：button/text -->
+			<uni-segmented-control :current="2" :values="['选项卡1','选项卡2','选项卡3']" @clickItem="consoleLog($event)" style-type="button" active-color="#4cd964"></uni-segmented-control>
+			<!-- 宫格: showBorder:显示边框(true)、square:正方形(true) -->
+			<uni-grid :column="3" :square="false" @change="consoleLog($event)">
+				<uni-grid-item>文本</uni-grid-item>
+				<uni-grid-item>文本</uni-grid-item>
+				<uni-grid-item>文本</uni-grid-item>
+			</uni-grid>
+			
+			
+			
+			
 			<!-- 轮播图: 使用swiper容器；不需要组件uni-swipe-action uni-swiper-dot -->
-			<swiper v-if="true" class="swiper" :autoplay="true" :indicator-dots="true">
+			<swiper :autoplay="true" :indicator-dots="true">
 				<swiper-item><image src="../../static/banner.jpg"></image></swiper-item>
 				<swiper-item><image src="../../static/banner.jpg"></image></swiper-item>
 				<swiper-item><image src="../../static/banner.jpg"></image></swiper-item>
 			</swiper>
-
 			<!-- 步骤条 -->
 			<uni-steps
 				v-if="true"
@@ -23,24 +41,14 @@
 				]"
 			></uni-steps>
 						
-			<!-- 宫格: showBorder:显示边框、square:正方形 -->
-			<uni-grid :column="3" :showBorder="true" :square="false">
-				<uni-grid-item><text class="text">文本</text></uni-grid-item>
-				<uni-grid-item><text class="text">文本</text></uni-grid-item>
-				<uni-grid-item><text class="text">文本</text></uni-grid-item>
-			</uni-grid>
-			
-			<!-- 日历 -->
+			<!-- 日历：lunar：显示农历；insert：插入模式 -->
 			<uni-calendar 
-			 v-if="true"
-			:insert="true"
 			:lunar="true" 
 			:start-date="'2019-3-2'"
 			:end-date="'2019-5-20'"
 			@change="consoleLog($event)"
 			 />
-
-			<!-- 加冒号的，说明后面的是一个变量或者表达式；没加冒号的后面就是对应的字符串字面量！ -->
+			 
 			
 			<!-- 图标: https://ext.dcloud.net.cn/plugin?id=28 -->
 			<uni-icons type="pengyouquan" color="red" size="32" @click="consoleLog($event)"></uni-icons>
@@ -61,11 +69,6 @@
 			<!-- 加载更多：loading 的状态，可选值：more（loading前）、loading（loading中）、noMore（没有更多了） -->
 			<uni-load-more status="loading"></uni-load-more>
 			
-			<!-- 导航：系统默认就有返回导航 -->
-			<uni-nav-bar left-icon="back" left-text="返回" right-text="菜单" title="导航栏组件"></uni-nav-bar>
-			
-			<!-- 通告栏：滚动时为单行；可现实喇叭图标、可显示关闭并关闭 -->
-			<uni-notice-bar scrollable="true" single="true" showIcon="true" showClose="true" text="[单行] 这是 NoticeBar 通告栏，这是 NoticeBar 通告栏，这是 NoticeBar 通告栏"></uni-notice-bar>
 		
 			<!-- 文本相关 -->
 			<!-- 标题:  -->
@@ -115,6 +118,12 @@
 			:showSelect="true"
 			:options="options" 
 			@click="consoleLog($event)"></uni-indexed-list>
+			
+			<!-- 数字输入框 -->
+			<uni-number-box :min="0" :max="9" @change="consoleLog($event)"></uni-number-box>
+			
+			<!-- 分页器 -->
+			<uni-pagination title="标题文字" show-icon="true" current="2" pageSize="10" total="50" @change="consoleLog($event)"></uni-pagination>
 		
 		</view>
 	</view>
@@ -201,5 +210,13 @@ uni-image {
 // 索引列表绝对定位
 /deep/.uni-indexed-list {
 	position: relative;
+}
+// 固定导航栏时宽度不足
+/deep/.uni-navbar--fixed {
+	width: 100%;
+}
+// 宫格水平居中
+/deep/.uni-grid-wrap {
+	text-align: center;
 }
 </style>

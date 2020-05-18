@@ -5,7 +5,7 @@
 		}, {
 			"path": "pages/test/test"
 		}, {
-			"path": "pages/demo/demo"
+			"path": "pages/uni-ui/uni-ui"
 		}
 	],
 	"globalStyle": {

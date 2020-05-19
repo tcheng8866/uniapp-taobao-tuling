@@ -77,18 +77,4 @@ export default {
 };
 </script>
 <style scoped lang="less">
-.page {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	background: #fafafa; //灰色
-	font-size: 14px;
-	text-align: left;
-	vertical-align: middle;
-	word-wrap: break-word;
-	.wrap {
-		background-color: #ffffff;
-		height: 100%;
-	}
-}
 </style>

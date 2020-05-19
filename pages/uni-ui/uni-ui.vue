@@ -1,9 +1,10 @@
 <template>
-	<view class="page">
-		<view class="wrap">
+	<view class="container">
+		<view class="page">
+			字体测试aygh1289
 			<!-- 组件参考：https://ext.dcloud.net.cn/plugin?id=55 -->
 			<!-- 加冒号的，说明后面的是一个变量或者表达式；没加冒号的后面就是对应的字符串字面量(所以props用number接收会报错)！ -->
-
+			<!-- 颜色类型，可选值：default（灰色）、primary（蓝色）、success（绿色）、warning(黄色)、error(红色) -->
 			<!-- 【完美支持】表单类 v-model 测试 -->
 			<uni-search-bar v-model="search" @confirm="consoleLog($event)"></uni-search-bar>
 
@@ -71,10 +72,10 @@
 			<!-- 评分(可以小数、但没提供每次step控制0.5)： -->
 			<uni-rate value="3.5" @change="consoleLog($event)"></uni-rate>
 
-			<!-- 图标:  color、size; https://ext.dcloud.net.cn/plugin?id=28 -->
+			<!-- 图标:  color、size(24); https://ext.dcloud.net.cn/plugin?id=28 -->
 			<uni-icons type="pengyouquan" @click="consoleLog($event)"></uni-icons>
 
-			<!-- 标签; inverted: 空心  type：控制颜色（default（灰色）、primary（蓝色）、success（绿色）、warning(黄色)、error(红色)） -->
+			<!-- 标签; inverted: 空心  type：控制颜色-->
 			<uni-tag text="标签" inverted="true" type="primary" @click="consoleLog($event)" style="width: 50px"></uni-tag>
 
 			<!-- 角标 -->
@@ -134,39 +135,23 @@
 			<!-- type="message" -->
 			<uni-popup ref="popup0" type="message">
 				<!-- success/warn/info/error -->
-				<uni-popup-message 
-					type="success" 
-					message="成功消息(这就是个带颜色轻提示/感觉没啥用)" 
-					:duration="2000"
-				></uni-popup-message>
+				<uni-popup-message type="success" message="成功消息(这就是个带颜色轻提示/感觉没啥用)" :duration="2000"></uni-popup-message>
 			</uni-popup>
 			<!-- type="dialog" -->
 			<uni-popup ref="popup1" type="dialog">
 				<!-- mode base（提示对话框）/input（可输入对话框） -->
 				<!-- （示例是错的、type/mode[base/input]混乱、已修复） -->
 				<!-- 取消不拦截 :before-close="true" -->
-				<uni-popup-dialog
-					type="success"
-					mode="base"
-					message="成功消息"
-					:duration="2000"
-					@close="close"
-					@confirm="close"
-				></uni-popup-dialog>
+				<uni-popup-dialog type="success" mode="input" message="成功消息" :duration="2000" @close="close" @confirm="close"></uni-popup-dialog>
 			</uni-popup>
 			<!-- type="share" -->
-			<uni-popup ref="popup2" type="share">
-				<uni-popup-share 
-					title="分享到" 
-					@select="consoleLog($event)"
-					>
-				</uni-popup-share></uni-popup>
+			<uni-popup ref="popup2" type="share"><uni-popup-share title="分享到" @select="consoleLog($event)"></uni-popup-share></uni-popup>
 		</view>
 	</view>
 </template>
 
 <script>
- //  从github uni-ui 复制的弹框拓展组件
+//  从github uni-ui 复制的弹框拓展组件
 import uniPopupMessage from '@/components/uni-popup/uni-popup-message.vue';
 import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog.vue';
 import uniPopupShare from '@/components/uni-popup/uni-popup-share.vue';
@@ -212,62 +197,10 @@ export default {
 			// this.$refs.popup0.close();
 			this.$refs.popup1.close();
 			// this.$refs.popup2.close();
-		}		
+		}
 	}
 };
 </script>
 <style scoped lang="less">
-.page {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	background: #fafafa; //灰色
-	font-size: 14px;
-	text-align: left;
-	vertical-align: middle;
-	word-wrap: break-word;
-	.wrap {
-		background-color: #ffffff;
-		height: 100%;
-	}
-}
-uni-swiper {
-	height: 175px;
-}
-uni-image {
-	width: 100%;
-	height: 100%;
-}
-// 角标单个数字不是圆形
-/deep/.uni-badge {
-	padding: 0;
-}
-// 卡片标题的图标偏上
-/deep/.uni-card__header-extra-img-view {
-	line-height: 0;
-}
-// 评分组件偏上
-/deep/.uni-rate__icon {
-	margin-top: 12px;
-}
-// 索引列表绝对定位
-/deep/.uni-indexed-list {
-	position: relative;
-}
-// 固定导航栏时宽度不足
-/deep/.uni-navbar--fixed {
-	width: 100%;
-}
-// 宫格水平居中
-/deep/.uni-grid-wrap {
-	text-align: center;
-}
-// 通知栏的默认外边距
-/deep/.uni-noticebar {
-	margin-bottom: 0;
-}
-// fixed导航层级比弹框高
-/deep/.uni-navbar--fixed {
-	z-index: 98;
-}
+@import url('../../mixin.less');
 </style>

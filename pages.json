@@ -1,13 +1,11 @@
 {
-	"pages": [
-		{
-			"path": "pages/index/index"
-		}, {
-			"path": "pages/test/test"
-		}, {
-			"path": "pages/uni-ui/uni-ui"
-		}
-	],
+	"pages": [{
+		"path": "pages/index/index"
+	}, {
+		"path": "pages/uni-ui/uni-ui"
+	}, {
+		"path": "pages/demo/demo"
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uniapp-prj",

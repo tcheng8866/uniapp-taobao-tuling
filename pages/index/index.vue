@@ -6,8 +6,8 @@
 				<view>{{item.content}}</view>
 			</view>
 		</view>
-		<navigator url="../test/test" open-type="navigate">
-			<button>uni-app组件名称</button>
+		<navigator url="../demo/demo" open-type="navigate">
+			<button>demo页面</button>
 		</navigator>
 		<navigator url="../uni-ui/uni-ui" open-type="navigate">
 			<button>uni-app组件示例</button>

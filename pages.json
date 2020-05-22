@@ -1,10 +1,13 @@
 {
-	"pages": [{
+	"pages": [
+	{
 		"path": "pages/index/index"
 	}, {
-		"path": "pages/uni-ui/uni-ui"
-	}, {
 		"path": "pages/demo/demo"
+	}, {
+		"path": "pages/demo/http"
+	}, {
+		"path": "pages/demo/ui"
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

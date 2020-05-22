@@ -1,17 +1,10 @@
 <template>
-	<view class="page">
-		<view class="wrap">
-			<!-- 请求封装 -->
-			<view v-for="(item, index) in list" :key="index">
-				<view>{{item.content}}</view>
-			</view>
+	<view class="container">
+		<view class="page">
+			<navigator url="../demo/demo" open-type="navigate"><button>demo</button></navigator>
+			<navigator url="../demo/http" open-type="navigate"><button>http</button></navigator>
+			<navigator url="../demo/ui" open-type="navigate"><button>ui</button></navigator>
 		</view>
-		<navigator url="../demo/demo" open-type="navigate">
-			<button>demo页面</button>
-		</navigator>
-		<navigator url="../uni-ui/uni-ui" open-type="navigate">
-			<button>uni-app组件示例</button>
-		</navigator>
 	</view>
 </template>
 
@@ -22,59 +15,17 @@ export default {
 	components: {},
 	props: {},
 	data() {
-		return {
-			list: []
-		};
+		return {};
 	},
 	computed: {},
 	watch: {},
-	async created() {
-		console.log(1)
-		await this.queryData()
-		console.log(2)
-	},
+	async created() {},
 	mounted() {},
 	destroyed() {},
-	methods: {
-		async queryData() {
-			// async await 包裹promise
-			// 这里写法就多了：接收变量(判断条件) / .then的写法都行
-			await this.requestPromise()
-				.then(res => {
-					console.log('success', res);
-					this.list=res.data.result.data
-				})
-				.catch(e => {
-					console.log('error', e);
-				});
-		},
-		requestPromise() {
-			// 把回调封装成promise形式
-			return new Promise((resolve, reject) => {
-				let time = (new Date().getTime() + '').substr(0, 10);
-				uni.request({
-					url: 'http://v.juhe.cn/joke/content/list.php',
-					data: {
-						key: 'bd50f1ee7e58f2e76eb39cf20618fbda',
-						page: 1,
-						pagesize: 1,
-						sort: 'desc1',
-						time: time
-					},
-					success: res => {
-						resolve(res);
-					},
-					fail: e => {
-						reject(e);
-					},
-					complete: () => {
-						console.log('complete do');
-					}
-				});
-			});
-		}
-	}
+	methods: {}
 };
 </script>
+
 <style scoped lang="less">
+@import url('../../mixin.less');
 </style>

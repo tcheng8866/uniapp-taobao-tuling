@@ -20,6 +20,7 @@
             <view class="rect5"></view>
           </view>
         </view>
+				<!-- 循环 msgList -->
         <view
           class="row"
           v-for="(row, index) in msgList"
@@ -651,8 +652,8 @@ export default {
             time: "12:57",
             userinfo: {
               uid: 1,
-              username: "售后客服008",
-              face: "/static/img/im/face/face_2.jpg"
+              username: "客服",
+              face: "/static/img/face.jpg"
             },
             content: {
               text:
@@ -668,7 +669,7 @@ export default {
             time: "13:05",
             userinfo: {
               uid: 0,
-              username: "大黑哥",
+              username: "我",
               face: "/static/img/face.jpg"
             },
             content: { url: "/static/voice/2.mp3", length: "00:06" }
@@ -855,7 +856,7 @@ export default {
             userinfo: {
               uid: 1,
               username: "售后客服008",
-              face: "/static/img/im/face/face_2.jpg"
+              face: "/static/img/face.jpg"
             },
             content: content
           }

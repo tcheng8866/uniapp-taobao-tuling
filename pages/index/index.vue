@@ -97,7 +97,7 @@
 					<view v-for="(em, eid) in page" :key="eid" @tap="addEmoji(em)"><image mode="widthFix" :src="'/static/img/emoji/' + em.url"></image></view>
 				</swiper-item>
 			</swiper>
-			<!-- 更多功能 相册-拍照-红包 -->
+			<!-- 更多功能 相册-拍照 -->
 			<view class="more-layer" :class="{ hidden: hideMore }">
 				<view class="list">
 					<view class="box" @tap="chooseImage"><view class="icon tupian2"></view></view>
@@ -498,7 +498,7 @@ export default {
 			// 请求图灵接口
 			this.requestPromise(content, type)
 				.then(res => {
-					console.log("反馈消息", res)
+					console.log("反馈消息", res.data.results[0].values.text)
 					let lastid = this.msgList[this.msgList.length - 1].msg.id;
 					let results = res.data.results || [];
 					if (results.length == 0) return
@@ -516,7 +516,7 @@ export default {
 								msg: {
 									id: lastid,
 									time: nowDate.getHours() + ':' + nowDate.getMinutes(),
-									type: type,
+									type: 'text',
 									userinfo: {
 										uid: 1,
 										username: '小黄鸭',
@@ -525,7 +525,7 @@ export default {
 									content: text
 								}
 							};
-							console.log("渲染消息", msgR)
+							console.log("渲染消息", text.temp)
 							// 图灵返回发送到聊天页面
 							this.screenMsg(msgR);
 						}
@@ -535,7 +535,74 @@ export default {
 					console.log(e);
 				});
 		},		
-	
+
+		// 图灵机器人
+		requestPromise(content, type) {
+			// text/img/voice
+			// 输入类型:0-文本(默认)、1-图片、2-音频
+			let obj = {}
+			if (type == 'text') {
+				console.log("textMsg", this.textMsg)
+				obj = {
+					reqType: 0,
+					"perception": {
+						"inputText": {
+							"text":  this.textMsg
+						}
+					},
+					userInfo: {
+						apiKey: 'f02af657e0f8456fad2c259d196e6581',
+						userId: '625479'
+					}
+				};
+				console.log('图灵入参[text]', obj.perception.inputText.text);
+			} else if (type == 'img') {
+				obj = {
+					reqType: 0,
+					"perception": {
+						"inputImage": {
+							"url":  content
+						}
+					},
+					userInfo: {
+						apiKey: 'f02af657e0f8456fad2c259d196e6581',
+						userId: '625479'
+					}
+				};
+				console.log('图灵入参[img]', obj.perception.inputImage.url);
+			} else {
+				obj = {
+					reqType: 0,
+					"perception": {
+						"inputMedia": {
+							"url":  content
+						}
+					},
+					userInfo: {
+						apiKey: 'f02af657e0f8456fad2c259d196e6581',
+						userId: '625479'
+					}
+				};
+				console.log('图灵入参[media]', obj.perception.inputMedia.url);
+			}
+			// 把回调封装成promise形式
+			return new Promise((resolve, reject) => {
+				uni.request({
+					url: 'http://openapi.tuling123.com/openapi/api/v2',
+					data: obj,
+					method: 'POST',
+					success: res => {
+						resolve(res);
+					},
+					fail: e => {
+						reject(e);
+					},
+					complete: () => {
+						console.log('complete do');
+					}
+				});
+			});
+		},
 		// 接受消息(筛选处理)
 		screenMsg(msg) {
 			//从长连接处转发给这个方法，进行筛选处理
@@ -559,7 +626,6 @@ export default {
 						this.addImgMsg(msg);
 						break;
 				}
-				console.log('用户消息');
 				//非自己的消息震动
 				if (msg.msg.userinfo.uid != this.myuid) {
 					console.log('振动');
@@ -570,50 +636,8 @@ export default {
 				// 滚动到底
 				this.scrollToView = 'msg' + msg.msg.id;
 			});
-		},
-	
-
-		// 图灵机器人
-		requestPromise(content, type) {
-			// text/voice/img
-			// 输入类型:0-文本(默认)、1-图片、2-音频
-			let obj = {
-				reqType: type == 'text'? 0 : type=='voice'? 1 : 2 ,
-				"perception": {
-					"inputText": {
-						"text":  type == 'text'? content : ''
-					},
-					"inputImage": {
-						"url": type == 'voice'? content : ''
-					},
-					"inputMedia": {
-						"url": type == 'img'? content : ''
-					},
-				},
-				userInfo: {
-					apiKey: 'f02af657e0f8456fad2c259d196e6581',
-					userId: '625479'
-				}
-			};
-			// 把回调封装成promise形式
-			return new Promise((resolve, reject) => {
-				console.log('图灵入参', obj);
-				uni.request({
-					url: 'http://openapi.tuling123.com/openapi/api/v2',
-					data: obj,
-					method: 'POST',
-					success: res => {
-						resolve(res);
-					},
-					fail: e => {
-						reject(e);
-					},
-					complete: () => {
-						console.log('complete do');
-					}
-				});
-			});
-		},
+		},		
+		
 		// 加载初始页面消息
 		getMsgList() {
 			// 消息列表

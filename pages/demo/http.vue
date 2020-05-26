@@ -55,6 +55,8 @@ export default {
 						sort: 'desc1',
 						time: time
 					},
+          method: "POST",
+          header: { "content-type": "application/x-www-form-urlencoded" },					
 					success: res => {
 						resolve(res);
 					},

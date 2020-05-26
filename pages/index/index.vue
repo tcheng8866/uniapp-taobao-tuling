@@ -460,51 +460,6 @@ export default {
 		this.scrollTop = 9999999;
 	},
 	methods: {
-
-		// 加载初始页面消息
-		getMsgList() {
-			// 消息列表
-			let list = [
-				{
-					type: 'system',
-					msg: {
-						id: 0,
-						type: 'text',
-						content: { text: '[系统消息]欢迎光临！我是机器人小黄鸭...' }
-					}
-				}
-			];
-			// 获取消息中的图片,并处理显示尺寸
-			for (let i = 0; i < list.length; i++) {
-				if (list[i].type == 'user' && list[i].msg.type == 'img') {
-					list[i].msg.content = this.setPicSize(list[i].msg.content);
-					this.msgImgList.push(list[i].msg.content.url);
-				}
-			}
-			this.msgList = list;
-			// 滚动到底部
-			this.$nextTick(function() {
-				//进入页面滚动到底部
-				this.scrollTop = 9999;
-				this.$nextTick(function() {
-					this.scrollAnimation = true;
-				});
-			});
-		},		
-		//处理图片尺寸，如果不处理宽高，新进入页面加载图片时候会闪
-		setPicSize(content) {
-			// 让图片最长边等于设置的最大长度，短边等比例缩小，图片控件真实改变，区别于aspectFit方式。
-			let maxW = uni.upx2px(350); //350是定义消息图片最大宽度
-			let maxH = uni.upx2px(350); //350是定义消息图片最大高度
-			if (content.w > maxW || content.h > maxH) {
-				let scale = content.w / content.h;
-				content.w = scale > 1 ? maxW : maxH * scale;
-				content.h = scale > 1 ? maxW / scale : maxH;
-			}
-			return content;
-		},
-		
-		
 		// 发送文字消息
 		sendText() {
 			this.hideDrawer(); //隐藏抽屉
@@ -517,28 +472,70 @@ export default {
 			this.sendMsg(msg, 'text');
 			this.textMsg = ''; //清空输入框
 		},
-		//替换表情符号为图片
-		replaceEmoji(str) {
-			let replacedStr = str.replace(/\[([^(\]|\[)]*)\]/g, (item, index) => {
-				console.log('item: ' + item);
-				for (let i = 0; i < this.emojiList.length; i++) {
-					let row = this.emojiList[i];
-					for (let j = 0; j < row.length; j++) {
-						let EM = row[j];
-						if (EM.alt == item) {
-							//在线表情路径，图文混排必须使用网络路径，请上传一份表情到你的服务器后再替换此路径
-							//比如你上传服务器后，你的100.gif路径为https://www.xxx.com/emoji/100.gif 则替换onlinePath填写为https://www.xxx.com/emoji/
-							let onlinePath = 'https://s2.ax1x.com/2019/04/12/';
-							let imgstr = '<img src="' + onlinePath + this.onlineEmoji[EM.url] + '">';
-							console.log('imgstr: ' + imgstr);
-							return imgstr;
+		// 发送消息
+		sendMsg(content, type) {
+			//实际应用中，此处应该提交长连接，模板仅做本地处理。
+			var nowDate = new Date();
+			let lastid = this.msgList[this.msgList.length - 1].msg.id;
+			lastid++;
+			let msg = {
+				type: 'user',
+				msg: {
+					id: lastid,
+					time: nowDate.getHours() + ':' + nowDate.getMinutes(),
+					type: type,
+					userinfo: {
+						uid: 0,
+						username: '访客',
+						face: '/static/img/visitor.jpg'
+					},
+					content: content
+				}
+			};
+			console.log("发送消息", msg)
+			// 发送消息到聊天界面
+			this.screenMsg(msg);
+			// 请求图灵接口
+			this.requestPromise(content, type)
+				.then(res => {
+					console.log("反馈消息", res)
+					let lastid = this.msgList[this.msgList.length - 1].msg.id;
+					let results = res.data.results || [];
+					if (results.length == 0) return
+					for (let i = 0; i < results.length; i++) {
+						lastid++;
+						let value ="";
+						// 文本(text);连接(url);音频(voice);视频(video);图片(image);图文(news)
+						if (results[i].resultType == 'text') {
+							value = results[i].values.text;
+							// 处理 文本
+							let temp = this.replaceEmoji(value);
+							let text = { text: temp };
+							let msgR = {
+								type: 'user',
+								msg: {
+									id: lastid,
+									time: nowDate.getHours() + ':' + nowDate.getMinutes(),
+									type: type,
+									userinfo: {
+										uid: 1,
+										username: '小黄鸭',
+										face: '/static/img/robot.jpg'
+									},
+									content: text
+								}
+							};
+							console.log("渲染消息", msgR)
+							// 图灵返回发送到聊天页面
+							this.screenMsg(msgR);
 						}
 					}
-				}
-			});
-			return '<div style="display: flex;align-items: center;word-wrap:break-word;">' + replacedStr + '</div>';
+				})
+				.catch(e => {
+					console.log(e);
+				});
 		},		
-		
+	
 		// 接受消息(筛选处理)
 		screenMsg(msg) {
 			//从长连接处转发给这个方法，进行筛选处理
@@ -574,110 +571,24 @@ export default {
 				this.scrollToView = 'msg' + msg.msg.id;
 			});
 		},
-		// 添加系统文字消息到列表
-		addSystemTextMsg(msg) {
-			this.msgList.push(msg);
-		},
-		// 添加文字消息到列表
-		addTextMsg(msg) {
-			this.msgList.push(msg);
-		},
-		// 添加语音消息到列表
-		addVoiceMsg(msg) {
-			this.msgList.push(msg);
-		},
-		// 添加图片消息到列表
-		addImgMsg(msg) {
-			msg.msg.content = this.setPicSize(msg.msg.content);
-			this.msgImgList.push(msg.msg.content.url);
-			this.msgList.push(msg);
-		},		
-
-		// 发送消息
-		sendMsg(content, type) {
-			//实际应用中，此处应该提交长连接，模板仅做本地处理。
-			var nowDate = new Date();
-			let lastid = this.msgList[this.msgList.length - 1].msg.id;
-			lastid++;
-			let msg = {
-				type: 'user',
-				msg: {
-					id: lastid,
-					time: nowDate.getHours() + ':' + nowDate.getMinutes(),
-					type: type,
-					userinfo: {
-						uid: 0,
-						username: '访客',
-						face: '/static/img/visitor.jpg'
-					},
-					content: content
-				}
-			};
-			console.log("发送消息", msg)
-			// 发送消息到聊天界面
-			this.screenMsg(msg);
-			// 请求图灵接口
-			this.requestPromise(content, type)
-				.then(res => {
-					console.log("反馈消息", res)
-					let lastid = this.msgList[this.msgList.length - 1].msg.id;
-					let results = res.data.results || [];
-					if (results.length == 0) return
-					for (let i = 0; i < results.length; i++) {
-						lastid++;
-						// 文本(text);连接(url);音频(voice);视频(video);图片(image);图文(news)
-						let value = results[i].resultType == 'text' ? results[i].values.text : results[i].values.url;
-						// 处理 文本
-						let temp = this.replaceEmoji(value);
-						let text = { text: temp };
-						
-						let msgR = {
-							type: 'user',
-							msg: {
-								id: lastid,
-								time: nowDate.getHours() + ':' + nowDate.getMinutes(),
-								type: type,
-								userinfo: {
-									uid: 1,
-									username: '小黄鸭',
-									face: '/static/img/robot.jpg'
-								},
-								content: text
-							}
-						};
-						console.log("渲染消息", msgR)
-						// 图灵返回发送到聊天页面
-						this.screenMsg(msgR);
-					}
-				})
-				.catch(e => {
-					console.log(e);
-				});
-		},
+	
 
 		// 图灵机器人
 		requestPromise(content, type) {
 			// text/voice/img
 			// 输入类型:0-文本(默认)、1-图片、2-音频
 			let obj = {
-				reqType: type=='text'? 0:type=='voice'? 1:2 ,
+				reqType: type == 'text'? 0 : type=='voice'? 1 : 2 ,
 				"perception": {
 					"inputText": {
-						"text":  type=='text'? content:''
+						"text":  type == 'text'? content : ''
 					},
 					"inputImage": {
-						"url": type=='voice'? content:''
+						"url": type == 'voice'? content : ''
 					},
 					"inputMedia": {
-						"url": type=='img'? content:''
-					},					
-					// "selfInfo": {
-					// 	"location": {
-					// 		"city": "北京",
-					// 		"province": "北京",
-					// 		"street": "信息路"
-					// 	}
-					// }
+						"url": type == 'img'? content : ''
+					},
 				},
 				userInfo: {
 					apiKey: 'f02af657e0f8456fad2c259d196e6581',
@@ -703,11 +614,87 @@ export default {
 				});
 			});
 		},
-
-
-
-
-
+		// 加载初始页面消息
+		getMsgList() {
+			// 消息列表
+			let list = [
+				{
+					type: 'system',
+					msg: {
+						id: 0,
+						type: 'text',
+						content: { text: '[系统消息]欢迎光临！我是机器人小黄鸭...' }
+					}
+				}
+			];
+			// 获取消息中的图片,并处理显示尺寸
+			for (let i = 0; i < list.length; i++) {
+				if (list[i].type == 'user' && list[i].msg.type == 'img') {
+					list[i].msg.content = this.setPicSize(list[i].msg.content);
+					this.msgImgList.push(list[i].msg.content.url);
+				}
+			}
+			this.msgList = list;
+			// 滚动到底部
+			this.$nextTick(function() {
+				//进入页面滚动到底部
+				this.scrollTop = 9999;
+				this.$nextTick(function() {
+					this.scrollAnimation = true;
+				});
+			});
+		},	
+		//处理图片尺寸，如果不处理宽高，新进入页面加载图片时候会闪
+		setPicSize(content) {
+			// 让图片最长边等于设置的最大长度，短边等比例缩小，图片控件真实改变，区别于aspectFit方式。
+			let maxW = uni.upx2px(350); //350是定义消息图片最大宽度
+			let maxH = uni.upx2px(350); //350是定义消息图片最大高度
+			if (content.w > maxW || content.h > maxH) {
+				let scale = content.w / content.h;
+				content.w = scale > 1 ? maxW : maxH * scale;
+				content.h = scale > 1 ? maxW / scale : maxH;
+			}
+			return content;
+		},
+		//替换表情符号为图片
+		replaceEmoji(str) {
+			let replacedStr = str.replace(/\[([^(\]|\[)]*)\]/g, (item, index) => {
+				console.log('item: ' + item);
+				for (let i = 0; i < this.emojiList.length; i++) {
+					let row = this.emojiList[i];
+					for (let j = 0; j < row.length; j++) {
+						let EM = row[j];
+						if (EM.alt == item) {
+							//在线表情路径，图文混排必须使用网络路径，请上传一份表情到你的服务器后再替换此路径
+							//比如你上传服务器后，你的100.gif路径为https://www.xxx.com/emoji/100.gif 则替换onlinePath填写为https://www.xxx.com/emoji/
+							let onlinePath = 'https://s2.ax1x.com/2019/04/12/';
+							let imgstr = '<img src="' + onlinePath + this.onlineEmoji[EM.url] + '">';
+							console.log('imgstr: ' + imgstr);
+							return imgstr;
+						}
+					}
+				}
+			});
+			return '<div style="display: flex;align-items: center;word-wrap:break-word;">' + replacedStr + '</div>';
+		},	
+		// 添加系统文字消息到列表
+		addSystemTextMsg(msg) {
+			this.msgList.push(msg);
+		},
+		// 添加文字消息到列表
+		addTextMsg(msg) {
+			this.msgList.push(msg);
+		},
+		// 添加语音消息到列表
+		addVoiceMsg(msg) {
+			this.msgList.push(msg);
+		},
+		// 添加图片消息到列表
+		addImgMsg(msg) {
+			msg.msg.content = this.setPicSize(msg.msg.content);
+			this.msgImgList.push(msg.msg.content.url);
+			this.msgList.push(msg);
+		},	
 		//触发滑动到顶部(加载历史信息记录)
 		loadHistory(e) {},
 		//更多功能(点击+弹出)

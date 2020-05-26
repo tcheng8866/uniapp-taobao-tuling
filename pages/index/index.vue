@@ -460,6 +460,85 @@ export default {
 		this.scrollTop = 9999999;
 	},
 	methods: {
+
+		// 加载初始页面消息
+		getMsgList() {
+			// 消息列表
+			let list = [
+				{
+					type: 'system',
+					msg: {
+						id: 0,
+						type: 'text',
+						content: { text: '[系统消息]欢迎光临！我是机器人小黄鸭...' }
+					}
+				}
+			];
+			// 获取消息中的图片,并处理显示尺寸
+			for (let i = 0; i < list.length; i++) {
+				if (list[i].type == 'user' && list[i].msg.type == 'img') {
+					list[i].msg.content = this.setPicSize(list[i].msg.content);
+					this.msgImgList.push(list[i].msg.content.url);
+				}
+			}
+			this.msgList = list;
+			// 滚动到底部
+			this.$nextTick(function() {
+				//进入页面滚动到底部
+				this.scrollTop = 9999;
+				this.$nextTick(function() {
+					this.scrollAnimation = true;
+				});
+			});
+		},		
+		//处理图片尺寸，如果不处理宽高，新进入页面加载图片时候会闪
+		setPicSize(content) {
+			// 让图片最长边等于设置的最大长度，短边等比例缩小，图片控件真实改变，区别于aspectFit方式。
+			let maxW = uni.upx2px(350); //350是定义消息图片最大宽度
+			let maxH = uni.upx2px(350); //350是定义消息图片最大高度
+			if (content.w > maxW || content.h > maxH) {
+				let scale = content.w / content.h;
+				content.w = scale > 1 ? maxW : maxH * scale;
+				content.h = scale > 1 ? maxW / scale : maxH;
+			}
+			return content;
+		},
+		
+		
+		// 发送文字消息
+		sendText() {
+			this.hideDrawer(); //隐藏抽屉
+			if (!this.textMsg) {
+				return;
+			}
+			let content = this.replaceEmoji(this.textMsg);
+			let msg = { text: content };
+			console.log("sendMsg: text", msg)
+			this.sendMsg(msg, 'text');
+			this.textMsg = ''; //清空输入框
+		},
+		//替换表情符号为图片
+		replaceEmoji(str) {
+			let replacedStr = str.replace(/\[([^(\]|\[)]*)\]/g, (item, index) => {
+				console.log('item: ' + item);
+				for (let i = 0; i < this.emojiList.length; i++) {
+					let row = this.emojiList[i];
+					for (let j = 0; j < row.length; j++) {
+						let EM = row[j];
+						if (EM.alt == item) {
+							//在线表情路径，图文混排必须使用网络路径，请上传一份表情到你的服务器后再替换此路径
+							//比如你上传服务器后，你的100.gif路径为https://www.xxx.com/emoji/100.gif 则替换onlinePath填写为https://www.xxx.com/emoji/
+							let onlinePath = 'https://s2.ax1x.com/2019/04/12/';
+							let imgstr = '<img src="' + onlinePath + this.onlineEmoji[EM.url] + '">';
+							console.log('imgstr: ' + imgstr);
+							return imgstr;
+						}
+					}
+				}
+			});
+			return '<div style="display: flex;align-items: center;word-wrap:break-word;">' + replacedStr + '</div>';
+		},		
+		
 		// 接受消息(筛选处理)
 		screenMsg(msg) {
 			//从长连接处转发给这个方法，进行筛选处理
@@ -495,162 +574,24 @@ export default {
 				this.scrollToView = 'msg' + msg.msg.id;
 			});
 		},
-
-		//触发滑动到顶部(加载历史信息记录)
-		loadHistory(e) {},
-		// 加载初始页面消息
-		getMsgList() {
-			// 消息列表
-			let list = [
-				{
-					type: 'system',
-					msg: {
-						id: 0,
-						type: 'text',
-						content: { text: '[系统消息]欢迎光临！我是机器人小黄鸭...' }
-					}
-				}
-			];
-			// 获取消息中的图片,并处理显示尺寸
-			for (let i = 0; i < list.length; i++) {
-				if (list[i].type == 'user' && list[i].msg.type == 'img') {
-					list[i].msg.content = this.setPicSize(list[i].msg.content);
-					this.msgImgList.push(list[i].msg.content.url);
-				}
-			}
-			this.msgList = list;
-			// 滚动到底部
-			this.$nextTick(function() {
-				//进入页面滚动到底部
-				this.scrollTop = 9999;
-				this.$nextTick(function() {
-					this.scrollAnimation = true;
-				});
-			});
+		// 添加系统文字消息到列表
+		addSystemTextMsg(msg) {
+			this.msgList.push(msg);
 		},
-		//处理图片尺寸，如果不处理宽高，新进入页面加载图片时候会闪
-		setPicSize(content) {
-			// 让图片最长边等于设置的最大长度，短边等比例缩小，图片控件真实改变，区别于aspectFit方式。
-			let maxW = uni.upx2px(350); //350是定义消息图片最大宽度
-			let maxH = uni.upx2px(350); //350是定义消息图片最大高度
-			if (content.w > maxW || content.h > maxH) {
-				let scale = content.w / content.h;
-				content.w = scale > 1 ? maxW : maxH * scale;
-				content.h = scale > 1 ? maxW / scale : maxH;
-			}
-			return content;
+		// 添加文字消息到列表
+		addTextMsg(msg) {
+			this.msgList.push(msg);
 		},
-
-		//更多功能(点击+弹出)
-		showMore() {
-			this.isVoice = false;
-			this.hideEmoji = true;
-			if (this.hideMore) {
-				this.hideMore = false;
-				this.openDrawer();
-			} else {
-				this.hideDrawer();
-			}
+		// 添加语音消息到列表
+		addVoiceMsg(msg) {
+			this.msgList.push(msg);
 		},
-		// 打开抽屉
-		openDrawer() {
-			this.popupLayerClass = 'showLayer';
-		},
-		// 隐藏抽屉
-		hideDrawer() {
-			this.popupLayerClass = '';
-			setTimeout(() => {
-				this.hideMore = true;
-				this.hideEmoji = true;
-			}, 150);
-		},
-		// 选择图片发送
-		chooseImage() {
-			this.getImage('album');
-		},
-		//拍照发送
-		camera() {
-			this.getImage('camera');
-		},
-		//选照片 or 拍照
-		getImage(type) {
-			this.hideDrawer();
-			uni.chooseImage({
-				sourceType: [type],
-				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-				success: res => {
-					for (let i = 0; i < res.tempFilePaths.length; i++) {
-						uni.getImageInfo({
-							src: res.tempFilePaths[i],
-							success: image => {
-								console.log(image.width);
-								console.log(image.height);
-								let msg = {
-									url: res.tempFilePaths[i],
-									w: image.width,
-									h: image.height
-								};
-								this.sendMsg(msg, 'img');
-							}
-						});
-					}
-				}
-			});
-		},
-		// 选择表情
-		chooseEmoji() {
-			this.hideMore = true;
-			if (this.hideEmoji) {
-				this.hideEmoji = false;
-				this.openDrawer();
-			} else {
-				this.hideDrawer();
-			}
-		},
-		//添加表情
-		addEmoji(em) {
-			this.textMsg += em.alt;
-		},
-
-		//获取焦点，如果不是选表情ing,则关闭抽屉
-		textareaFocus() {
-			if (this.popupLayerClass == 'showLayer' && this.hideMore == false) {
-				this.hideDrawer();
-			}
-		},
-		// 发送文字消息
-		sendText() {
-			this.hideDrawer(); //隐藏抽屉
-			if (!this.textMsg) {
-				return;
-			}
-			let content = this.replaceEmoji(this.textMsg);
-			let msg = { text: content };
-			console.log("sendMsg: text", msg)
-			this.sendMsg(msg, 'text');
-			this.textMsg = ''; //清空输入框
-		},
-		//替换表情符号为图片
-		replaceEmoji(str) {
-			let replacedStr = str.replace(/\[([^(\]|\[)]*)\]/g, (item, index) => {
-				console.log('item: ' + item);
-				for (let i = 0; i < this.emojiList.length; i++) {
-					let row = this.emojiList[i];
-					for (let j = 0; j < row.length; j++) {
-						let EM = row[j];
-						if (EM.alt == item) {
-							//在线表情路径，图文混排必须使用网络路径，请上传一份表情到你的服务器后再替换此路径
-							//比如你上传服务器后，你的100.gif路径为https://www.xxx.com/emoji/100.gif 则替换onlinePath填写为https://www.xxx.com/emoji/
-							let onlinePath = 'https://s2.ax1x.com/2019/04/12/';
-							let imgstr = '<img src="' + onlinePath + this.onlineEmoji[EM.url] + '">';
-							console.log('imgstr: ' + imgstr);
-							return imgstr;
-						}
-					}
-				}
-			});
-			return '<div style="display: flex;align-items: center;word-wrap:break-word;">' + replacedStr + '</div>';
-		},
+		// 添加图片消息到列表
+		addImgMsg(msg) {
+			msg.msg.content = this.setPicSize(msg.msg.content);
+			this.msgImgList.push(msg.msg.content.url);
+			this.msgList.push(msg);
+		},		
 
 		// 发送消息
 		sendMsg(content, type) {
@@ -763,32 +704,87 @@ export default {
 			});
 		},
 
-		// 添加文字消息到列表
-		addTextMsg(msg) {
-			this.msgList.push(msg);
+
+
+
+
+		//触发滑动到顶部(加载历史信息记录)
+		loadHistory(e) {},
+		//更多功能(点击+弹出)
+		showMore() {
+			this.isVoice = false;
+			this.hideEmoji = true;
+			if (this.hideMore) {
+				this.hideMore = false;
+				this.openDrawer();
+			} else {
+				this.hideDrawer();
+			}
 		},
-		// 添加语音消息到列表
-		addVoiceMsg(msg) {
-			this.msgList.push(msg);
+		// 打开抽屉
+		openDrawer() {
+			this.popupLayerClass = 'showLayer';
 		},
-		// 添加图片消息到列表
-		addImgMsg(msg) {
-			msg.msg.content = this.setPicSize(msg.msg.content);
-			this.msgImgList.push(msg.msg.content.url);
-			this.msgList.push(msg);
+		// 隐藏抽屉
+		hideDrawer() {
+			this.popupLayerClass = '';
+			setTimeout(() => {
+				this.hideMore = true;
+				this.hideEmoji = true;
+			}, 150);
 		},
-		// 添加系统文字消息到列表
-		addSystemTextMsg(msg) {
-			this.msgList.push(msg);
+		// 选择图片发送
+		chooseImage() {
+			this.getImage('album');
 		},
-		sendSystemMsg(content, type) {
-			let lastid = this.msgList[this.msgList.length - 1].msg.id;
-			lastid++;
-			let row = {
-				type: 'system',
-				msg: { id: lastid, type: type, content: content }
-			};
-			this.screenMsg(row);
+		//拍照发送
+		camera() {
+			this.getImage('camera');
+		},
+		//选照片 or 拍照
+		getImage(type) {
+			this.hideDrawer();
+			uni.chooseImage({
+				sourceType: [type],
+				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+				success: res => {
+					for (let i = 0; i < res.tempFilePaths.length; i++) {
+						uni.getImageInfo({
+							src: res.tempFilePaths[i],
+							success: image => {
+								console.log(image.width);
+								console.log(image.height);
+								let msg = {
+									url: res.tempFilePaths[i],
+									w: image.width,
+									h: image.height
+								};
+								this.sendMsg(msg, 'img');
+							}
+						});
+					}
+				}
+			});
+		},
+		// 选择表情
+		chooseEmoji() {
+			this.hideMore = true;
+			if (this.hideEmoji) {
+				this.hideEmoji = false;
+				this.openDrawer();
+			} else {
+				this.hideDrawer();
+			}
+		},
+		//添加表情
+		addEmoji(em) {
+			this.textMsg += em.alt;
+		},
+		//获取焦点，如果不是选表情ing,则关闭抽屉
+		textareaFocus() {
+			if (this.popupLayerClass == 'showLayer' && this.hideMore == false) {
+				this.hideDrawer();
+			}
 		},
 		// 预览图片
 		showPic(msg) {

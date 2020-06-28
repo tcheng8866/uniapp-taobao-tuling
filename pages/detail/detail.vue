@@ -19,7 +19,7 @@
 				<view class="Coupon" @click="handleBuy()">
 					<view class="ActMoney">
 						<view class="big-money">{{ item.ActMoney }}元优惠券</view>
-						<view class="date">使用时间: {{item.BeginDate.substr(0,10)}} -  {{item.EndDate.substr(0,10)}}</view>
+						<view class="date">使用时间: {{ item.BeginDate | subStr10 }} - {{ item.EndDate | subStr10 }}</view>
 					</view>
 					<view class="Collect">
 						<view>立刻</view>
@@ -27,8 +27,8 @@
 					</view>
 				</view>
 				<!-- 店铺/相关推荐/商品详情 -->
-				<view class="ShopName">{{item.ShopName}}</view>
-				<view class="TjRemark">{{item.TjRemark}}</view>
+				<view class="ShopName">{{ item.ShopName }}</view>
+				<view class="TjRemark">{{ item.TjRemark }}</view>
 				<image class="ImgUrl" :src="item.ImgUrl"></image>
 			</view>
 			<!-- 分享/购买/收藏 -->
@@ -36,6 +36,14 @@
 				<view class="share">分享</view>
 				<view class="buy">立刻购买</view>
 			</view>
+		</view>
+		<view class="tkl-block">
+			<view>
+				復置本段内容{{ link.tkl }}达开tao寶或掂击炼接
+				<uni-link>{{ link.shortLink }}</uni-link>
+				...[{{ item.LongGoodsName }}}]
+			</view>
+			<button>复制淘口令</button>
 		</view>
 	</view>
 </template>
@@ -54,6 +62,13 @@ export default {
 	},
 	computed: {},
 	watch: {},
+	filters: {
+		subStr10(e) {
+			if (e) {
+				return e.substr(0, 10);
+			}
+		}
+	},
 	onLoad(e) {
 		let id = e.id;
 		this.queryData(id);
@@ -93,8 +108,8 @@ export default {
 				});
 			});
 		},
-		async  handleBuy() {
-			let id =  this.item.GoodsId
+		async handleBuy() {
+			let id = this.item.GoodsId;
 			await this.requestPromiseBuy(id)
 				.then(res => {
 					console.log('success', res);
@@ -103,8 +118,7 @@ export default {
 				})
 				.catch(e => {
 					console.log('error', e);
-				});			
-			
+				});
 		},
 		requestPromiseBuy(id) {
 			// 把回调封装成promise形式
@@ -123,7 +137,7 @@ export default {
 					}
 				});
 			});
-		},		
+		}
 	}
 };
 </script>
@@ -135,10 +149,10 @@ export default {
 }
 .video {
 	width: 100%;
-	height: 500px;
+	height: 375px;
 }
 .block {
-	padding: 0  10px;
+	padding: 0 10px;
 }
 .between {
 	display: flex;
@@ -172,14 +186,15 @@ export default {
 		.big-money {
 			font-size: 20px;
 		}
-		.date {}
+		.date {
+		}
 	}
-	.Collect{
+	.Collect {
 		padding: 14px;
 		flex: 2;
 		background: red;
 		color: white;
-		border-radius: 10px;	
+		border-radius: 10px;
 	}
 }
 .ShopName {
@@ -188,7 +203,7 @@ export default {
 	color: blue;
 	margin-bottom: 10px;
 }
-.TjRemark{
+.TjRemark {
 	text-indent: 22px;
 }
 .ImgUrl {
@@ -196,13 +211,17 @@ export default {
 	width: 100%;
 	height: 300px;
 }
+.tkl-block {
+	position: fixed;
+	width: 100%;
+	top: 50%;
+	left: 0%;
+}
 .share-buy {
 	display: none;
 	.share {
-		
 	}
 	.buy {
-		
 	}
 }
 </style>

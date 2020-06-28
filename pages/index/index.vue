@@ -122,7 +122,7 @@ export default {
 }
 .image-item {
 	width: 100%;
-	height: 170px;
+	height: 175px;
 	border-radius: 5px 5px 0 0;
 	overflow: hidden;
 	image {
@@ -180,7 +180,7 @@ movable-area {
 	position: absolute;
 	top: 0;
     right: 0;
-    height: 500px;
+    height: 667px;
     width: 13%;
     overflow: hidden;
 	movable-view {

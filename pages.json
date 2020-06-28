@@ -2,24 +2,25 @@
 	"pages": [{
 		"path": "pages/index/index"
 	}, {
-		"path": "pages/chat/chat"
+		"path": "pages/detail/detail",
+		"style": {
+			"navigationBarTitleText": "商品详情"
+		}
+	}, {
+		"path": "pages/chat/chat",
+		"style": {
+			"navigationBarTitleText": "图灵机器人"
+		}
 	}, {
 		"path": "pages/demo/demo"
 	}, {
 		"path": "pages/demo/http"
 	}, {
 		"path": "pages/demo/ui"
-	}, {
-		"path": "pages/index/index",
-		"style": {}
-	}    ,{
-            "path" : "pages/detail/detail",
-            "style" : {}
-        }
-    ],
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "uniapp-prj",
+		"navigationBarTitleText": "淘宝优惠券",
 		"navigationBarBackgroundColor": "#007AFF",
 		"backgroundColor": "#FFFFFF"
 	}

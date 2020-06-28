@@ -4,18 +4,32 @@
 			<view class="list">
 				<view v-for="(item, index) in list" :key="index" class="item" @click="navToDetailPage(item)">
 					<view class="image-item"><image :src="item.ImgUrl"></image></view>
-					<view class="title">{{ item.GoodsName }}</view>
-					<view class="between">
-						<view class="ActMoney">{{ item.ActMoney }}元券</view>
-						<view class="SaleCount">月销 {{ item.SaleCount }}</view>
-					</view>
-					<view class="between">
-						<view class="LastPrice">券后￥{{ item.LastPrice }}</view>
-						<view class="GoodsPrice">原价￥{{ item.GoodsPrice }}</view>
+					<view class="block">
+						<view class="title">{{ item.GoodsName }}</view>
+						<view class="between">
+							<view class="ActMoney">{{ item.ActMoney }}元券</view>
+							<view class="SaleCount">月销 {{ item.SaleCount }}</view>
+						</view>
+						<view class="between">
+							<view class="LastPrice">
+								券后￥
+								<text class="big">{{ item.LastPrice }}</text>
+							</view>
+							<view class="GoodsPrice">原价￥{{ item.GoodsPrice }}</view>
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
+		<!-- 跳转图灵机器人聊天 -->
+		<movable-area>
+			<movable-view :x="x" :y="y" direction="all" @change="onChange" @click="navToChatPage">
+				<view class="icon">
+					<image class="robot" src="../../static/img/robot.jpg"></image>
+					<view>小黄鸡</view>
+				</view>
+			</movable-view>
+		</movable-area>
 	</view>
 </template>
 
@@ -27,7 +41,13 @@ export default {
 	props: {},
 	data() {
 		return {
-			list: []
+			list: [],
+			x: 325,
+			y: 350,
+			old: {
+				x: 0,
+				y: 0
+			}
 		};
 	},
 	computed: {},
@@ -75,6 +95,15 @@ export default {
 			uni.navigateTo({
 				url: `/pages/detail/detail?id=${id}`
 			});
+		},
+		onChange: function(e) {
+			this.old.x = e.detail.x;
+			this.old.y = e.detail.y;
+		},
+		navToChatPage() {
+			uni.navigateTo({
+				url: `/pages/chat/chat`
+			});
 		}
 	}
 };
@@ -85,35 +114,16 @@ export default {
 .list {
 	.item {
 		float: left;
+		padding: 5px;
 		width: 50%;
-		padding: 20rpx;
+		background-color: white;
+		background-clip: content-box;
 	}
 }
-.between {
-	display: flex;
-	justify-content: space-between;
-	padding: 6rpx 0;
-}
-.ActMoney {
-	background: red;
-	color: white;
-	padding: 0 5px;
-	border-radius: 5px;
-}
-.SaleCount {
-	color: darkgray;
-}
-.LastPrice {
-	color: red;
-}
-.GoodsPrice {
-	text-decoration: line-through;
-}
-
 .image-item {
 	width: 100%;
 	height: 170px;
-	border-radius: 8px 8px 0 0;
+	border-radius: 5px 5px 0 0;
 	overflow: hidden;
 	image {
 		width: 100%;
@@ -132,6 +142,60 @@ export default {
 		top: 0;
 		width: 100%;
 		height: 100%;
+	}
+}
+.block {
+	padding: 0 5px;
+	.title {
+		height: 38px;
+		overflow: hidden;
+	}
+	.between {
+		display: flex;
+		justify-content: space-between;
+		padding: 6rpx 0;
+
+		.ActMoney {
+			background: red;
+			color: white;
+			padding: 0 5px;
+			border-radius: 5px;
+		}
+		.SaleCount {
+			color: darkgray;
+		}
+		.LastPrice {
+			color: red;
+		}
+		.GoodsPrice {
+			text-decoration: line-through;
+		}
+		.big {
+			font-size: 22px;
+		}
+	}
+}
+
+movable-area {
+	position: absolute;
+	top: 0;
+    right: 0;
+    height: 500px;
+    width: 13%;
+    overflow: hidden;
+	movable-view {
+		width: 50px;
+		height: 50px;
+		.icon {
+			background-color: red;
+			text-align: center;
+			color: yellow;
+			padding-bottom: 5px;
+			.robot {
+				width: 50px;
+				height: 50px;
+			}
+		}
 	}
 }
 </style>

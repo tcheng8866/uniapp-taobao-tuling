@@ -9,7 +9,7 @@
 	}, {
 		"path": "pages/chat/chat",
 		"style": {
-			"navigationBarTitleText": "图灵机器人"
+			"navigationBarTitleText": "图灵"
 		}
 	}, {
 		"path": "pages/demo/demo"

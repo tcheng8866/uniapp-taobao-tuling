@@ -15,7 +15,11 @@
 						人购买
 					</view>
 				</view>
+				<!-- 商品名称 -->
 				<view class="LongGoodsName">{{ item.LongGoodsName }}</view>
+				<!-- 描述 -->
+				<view class="TjRemark">{{ item.TjRemark }}</view>
+				<!-- 优惠券-购买 -->
 				<view class="Coupon" @click="handleBuy()">
 					<view class="ActMoney">
 						<view class="big-money">{{ item.ActMoney }}元优惠券</view>
@@ -26,24 +30,19 @@
 						<view>领券</view>
 					</view>
 				</view>
-				<!-- 店铺/相关推荐/商品详情 -->
+				<!-- 店铺 -->
 				<view class="ShopName">{{ item.ShopName }}</view>
-				<view class="TjRemark">{{ item.TjRemark }}</view>
-				<image class="ImgUrl" :src="item.ImgUrl"></image>
-			</view>
-			<!-- 分享/购买/收藏 -->
-			<view class="share-buy">
-				<view class="share">分享</view>
-				<view class="buy">立刻购买</view>
+				<!-- 图片 -->
+				<image v-if="item.video" class="ImgUrl" :src="item.ImgUrl"></image>
 			</view>
 		</view>
-		<view class="tkl-block">
+		<view class="tkl-block" v-show="copyBlock">
 			<view>
 				復置本段内容{{ link.tkl }}达开tao寶或掂击炼接
 				<uni-link>{{ link.shortLink }}</uni-link>
 				...[{{ item.LongGoodsName }}}]
 			</view>
-			<button>复制淘口令</button>
+			<button @click="copy()">复制淘口令</button>
 		</view>
 	</view>
 </template>
@@ -56,6 +55,7 @@ export default {
 	props: {},
 	data() {
 		return {
+			copyBlock: false,
 			item: {},
 			link: {}
 		};
@@ -114,6 +114,7 @@ export default {
 				.then(res => {
 					console.log('success', res);
 					this.link = res.data;
+					this.copyBlock = true
 					console.log(this.link);
 				})
 				.catch(e => {
@@ -136,6 +137,20 @@ export default {
 						console.log('complete do');
 					}
 				});
+			});
+		},
+		// 复制剪贴板
+		copy() {
+			uni.setClipboardData({
+				  data: this.link,
+			    success: function (res) {
+						console.log(res.data)
+						this.copyBlock = false
+					},
+					fail: e => {
+						console.log(e)
+						this.copyBlock = false
+					},
 			});
 		}
 	}
@@ -186,8 +201,6 @@ export default {
 		.big-money {
 			font-size: 20px;
 		}
-		.date {
-		}
 	}
 	.Collect {
 		padding: 14px;
@@ -198,10 +211,10 @@ export default {
 	}
 }
 .ShopName {
-	text-align: center;
+	text-align: left;
 	font-size: 20px;
 	color: blue;
-	margin-bottom: 10px;
+	margin: 10px 0;
 }
 .TjRemark {
 	text-indent: 22px;
@@ -216,12 +229,13 @@ export default {
 	width: 100%;
 	top: 50%;
 	left: 0%;
-}
-.share-buy {
-	display: none;
-	.share {
-	}
-	.buy {
+	padding: 50px 30px;
+	font-size: 18px;
+	text-indent: 22px;
+	color: white;
+	background-color: chartreuse;
+	button {
+		margin-top: 20px;
 	}
 }
 </style>

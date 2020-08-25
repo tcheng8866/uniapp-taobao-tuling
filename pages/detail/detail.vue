@@ -20,7 +20,7 @@
 				<!-- 描述 -->
 				<view class="TjRemark">{{ item.TjRemark }}</view>
 				<!-- 优惠券-购买 -->
-				<view class="Coupon" @click="handleBuy()">
+				<view class="Coupon" @click="showDialog()">
 					<view class="ActMoney">
 						<view class="big-money">{{ item.ActMoney }}元优惠券</view>
 						<view class="date">使用时间: {{ item.BeginDate | subStr10 }} - {{ item.EndDate | subStr10 }}</view>
@@ -36,13 +36,16 @@
 				<image v-if="item.video" class="ImgUrl" :src="item.ImgUrl"></image>
 			</view>
 		</view>
+		<!-- 遮罩 -->
+        <view class="mask" v-show="copyBlock" @click="copyBlock=false">
+        </view>
+		<!-- 弹框 -->
 		<view class="tkl-block" v-show="copyBlock">
-			<view>
+			<text :selectable='true'>
 				復置本段内容{{ link.tkl }}达开tao寶或掂击炼接
 				<uni-link>{{ link.shortLink }}</uni-link>
 				...[{{ item.LongGoodsName }}}]
-			</view>
-			<button @click="copy()">复制淘口令</button>
+			</text>
 		</view>
 	</view>
 </template>
@@ -77,6 +80,7 @@ export default {
 	mounted() {},
 	destroyed() {},
 	methods: {
+		// 初始化
 		async queryData(id) {
 			// async await 包裹promise
 			// 这里写法就多了：接收变量(判断条件) / .then的写法都行
@@ -90,6 +94,7 @@ export default {
 					console.log('error', e);
 				});
 		},
+		// 查询详情
 		requestPromise(id) {
 			// 把回调封装成promise形式
 			return new Promise((resolve, reject) => {
@@ -108,7 +113,8 @@ export default {
 				});
 			});
 		},
-		async handleBuy() {
+		// 调用转链、展示淘口令
+		async showDialog() {
 			let id = this.item.GoodsId;
 			await this.requestPromiseBuy(id)
 				.then(res => {
@@ -121,6 +127,7 @@ export default {
 					console.log('error', e);
 				});
 		},
+		// 单品转链
 		requestPromiseBuy(id) {
 			// 把回调封装成promise形式
 			return new Promise((resolve, reject) => {
@@ -139,7 +146,7 @@ export default {
 				});
 			});
 		},
-		// 复制剪贴板
+		// 复制剪贴板（方法可能不行，已设置text标签允许自己复制）
 		copy() {
 			uni.setClipboardData({
 				  data: this.link,
@@ -224,18 +231,27 @@ export default {
 	width: 100%;
 	height: 300px;
 }
+.mask {  
+  position: fixed;  
+  top:0;  
+  left:0;  
+  z-index:999;  
+  width:100%;  
+  height:100vh;  
+  background:rgba(0,0,0,0.4);  
+
+}
 .tkl-block {
 	position: fixed;
+	transform: translate(-50%,-50%);
 	width: 100%;
 	top: 50%;
-	left: 0%;
+	left: 50%;
 	padding: 50px 30px;
 	font-size: 18px;
 	text-indent: 22px;
 	color: white;
 	background-color: chartreuse;
-	button {
-		margin-top: 20px;
-	}
+	z-index: 1000;
 }
 </style>

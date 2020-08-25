@@ -636,26 +636,26 @@ export default {
     requestPromise(content, type) {
       // 图灵只能识别图片文字好像
       // 输入类型:0-文本(默认)、1-图片、2-音频
-      let obj = {
-        reqType: 0,
-        perception: {
-          inputText: {
-            text: this.textMsg
-          }
-        },
-        userInfo: {
-          apiKey: "f02af657e0f8456fad2c259d196e6581",
-          userId: "625479"
-        }
-      };
-      console.log("图灵入参[text]", obj.perception.inputText.text);
+		let obj = {
+			"reqType":0,
+			"perception": {
+				"inputText": {
+					"text": this.textMsg
+				}
+			},
+			"userInfo": {
+				"apiKey": "f02af657e0f8456fad2c259d196e6581",
+				"userId": "625479"
+			}
+		};
 
       // 把回调封装成promise形式
       return new Promise((resolve, reject) => {
         uni.request({
           url: "http://openapi.tuling123.com/openapi/api/v2",
-          data: obj,
           method: "POST",
+          dataType: "json",
+          data:JSON.stringify(obj),
           success: res => {
             resolve(res);
           },

@@ -3,7 +3,7 @@
 		<view class="item" v-for="(item, index) in list" :key="index" @click="navToDetailPage(item)">
 			<image style="height: 350rpx;" :src="item.ImgUrl"></image>
 			<view style="padding: 0 5px;">
-				<view class="font-size-16">{{ item.GoodsName }}</view>
+				<view class="font-size-16" style="height: 42px;">{{ item.GoodsName }}</view>
 				<view class="between" style="padding: 5px 0;">
 					<view class="red-block">{{ item.ActMoney }}元券</view>
 					<view class="darkgray">月销 {{ item.SaleCount }}</view>

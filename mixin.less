@@ -9,49 +9,103 @@ uni-image {
 	width: 100%;
 	height: 100%;
 }
-// 角标单个数字不是圆形
-/deep/.uni-badge {
+// 角标单个、多个圆形
+.uni-badge {
 	padding: 0;
+	width: 20px !important;
 }
-// 固定导航栏时宽度不足
-/deep/.uni-navbar--fixed {
-	width: 100%;
+// 固定导航栏时宽度不足【已被修复】
+.uni-navbar--fixed {
+	// width: 100%;
 }
-// fixed导航层级比弹框高
-/deep/.uni-navbar--fixed {
-	z-index: 98;
-}
-// 评分组件偏上
-/deep/.uni-rate__icon {
-	margin-top: 12px;
+// fixed导航层级比弹框高【已被修复】
+.uni-navbar--fixed {
+	// z-index: 98;
 }
 // 通知栏的默认底部外边距
-/deep/.uni-noticebar {
+.uni-noticebar {
 	margin-bottom: 0;
 }
 // 卡片标题的图标偏上
-/deep/.uni-card__header-extra-img-view {
+.uni-card__header-extra-img-view {
 	line-height: 0;
 }
 // 索引列表绝对定位
-/deep/.uni-indexed-list {
+.uni-indexed-list {
 	position: relative;
 }
-// 宫格水平居中
-/deep/.uni-grid-wrap {
-	text-align: center;
+// 宫格水平居中【包括正方形】
+.uni-grid-item__box {
+	justify-content: center; 
+  align-items: center;
 }
+uni-video {
+	width: 100%;
+}
+
+// 不要复写icon大小、会导致内外侧坍塌
+// 标签左右间距过大(16px)、但需要import才能复写，故：放弃复写，组件传入
+// .uni-switch .uni-switch-input:not([class*="bg-"]) 样式和colorUI冲突，已修改colorUI
+
 // 封装公共样式
 .container {
 	position: relative;
 	width: 100%;
 	height: 100%;
-	background: #F8F8F8; //灰色
+	background: #ffffff; //灰色  #F8F8F8
 	font-size: 28rpx;
 	text-align: left;
-	.page {
-		// 这个别统一加padding、margin 很多组件都默认加
-		background-color: #ffffff;
-		height: 100%;
-	}
 }
+
+// 封装公共样式
+
+.between {
+	display: flex;
+	justify-content: space-between;
+}
+.around {
+	display: flex;
+	justify-content: space-around;
+}
+.start {
+	display: flex;
+	justify-content: flex-start;
+}
+.end {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.red {
+	color: red;
+}
+// 红色块【tag】
+.red-block {
+	background: red;
+	color: white;
+	padding: 0 5px;
+	border-radius: 5px;
+}
+.darkgray {
+	color: darkgray;
+}
+// 下划线`
+.decoration {
+	text-decoration: line-through;
+}
+.font-size-14 {
+	font-size: 14px
+}
+.font-size-16 {
+	font-size: 16px
+}
+.font-size-18 {
+	font-size: 18px
+}
+.font-size-20 {
+	font-size: 20px
+}
+.font-size-30 {
+	font-size: 30px
+}
+

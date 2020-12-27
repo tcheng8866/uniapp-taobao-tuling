@@ -177,10 +177,10 @@ switch .uni-switch-input {
 	margin: 0;
 	border-radius: 100upx;
 }
-
+/* 此处会覆盖uni-ui样式 */
 switch .wx-switch-input:not([class*="bg-"]),
 switch .uni-switch-input:not([class*="bg-"]) {
-	background: #8799a3 !important;
+	/* background: #8799a3 !important; */
 }
 
 switch .wx-switch-input::after,

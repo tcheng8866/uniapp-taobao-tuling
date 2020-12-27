@@ -1,11 +1,13 @@
 <template>
-	<text class="uni-link" :class="{'uni-link--withline':showUnderLine===true||showUnderLine==='true'}" :style="{color,fontSize:fontSize+'px'}" @click="openURL">{{text}}</text>
+	<text class="uni-link" :class="{'uni-link--withline':showUnderLine===true||showUnderLine==='true'}" :style="{color,fontSize:fontSize+'px'}"
+	 @click="openURL">{{text}}</text>
 </template>
 
 <script>
 	/**
 	 * Link 外部网页超链接组件
 	 * @description uni-link是一个外部网页超链接组件，在小程序内复制url，在app内打开外部浏览器，在h5端打开新网页
+	 * @tutorial https://ext.dcloud.net.cn/plugin?id=1182
 	 * @property {String} href 点击后打开的外部网页url
 	 * @property {String} text 显示的文字
 	 * @property {Boolean} showUnderLine 是否显示下划线
@@ -64,7 +66,12 @@
 	}
 </script>
 
-<style scoped>
+<style>
+	/* #ifndef APP-NVUE */
+	.uni-link {
+	    cursor: pointer;
+	}
+	/* #endif */
 	.uni-link--withline {
 		text-decoration: underline;
 	}

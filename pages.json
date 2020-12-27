@@ -1,27 +1,62 @@
 {
-	"pages": [{
-		"path": "pages/index/index"
-	}, {
-		"path": "pages/detail/detail",
-		"style": {
-			"navigationBarTitleText": "商品详情"
+	"pages": [
+		{
+			"path": "pages/index/index"
+		}, {
+			"path": "pages/fenlei/index"
+		}, {
+			"path": "pages/shoucang/index"
+		}, {
+			"path": "pages/wode/index"
+		}, {
+			"path": "pages/robot/index"
+		}, {
+			"path": "pages/detail/index"
+		}, {
+			"path": "pages/demo/uniui"
 		}
-	}, {
-		"path": "pages/chat/chat",
-		"style": {
-			"navigationBarTitleText": "图灵"
-		}
-	}, {
-		"path": "pages/demo/demo"
-	}, {
-		"path": "pages/demo/http"
-	}, {
-		"path": "pages/demo/ui"
-	}],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "淘宝优惠券",
-		"navigationBarBackgroundColor": "#007AFF",
+		"navigationBarBackgroundColor": "#ffaa00",
 		"backgroundColor": "#FFFFFF"
+	},
+	// "tabBar": {
+	// 		"color": "#7A7E83",
+	// 		"selectedColor": "#3cc51f",
+	// 		"borderStyle": "black",
+	// 		"backgroundColor": "#ffffff",
+	// 		"list": [{
+	// 				"pagePath": "pages/index/index",
+	// 				"iconPath": "static/tabBar/shouye.png",
+	// 				"selectedIconPath": "static/tabBar/shouye_active.png",
+	// 				"text": "首页"
+	// 		}, {
+	// 				"pagePath": "pages/fenlei/index",
+	// 				"iconPath": "static/tabBar/fenlei.png",
+	// 				"selectedIconPath": "static/tabBar/fenlei_active.png",
+	// 				"text": "分类"
+	// 		}, {
+	// 				"pagePath": "pages/shoucang/index",
+	// 				"iconPath": "static/tabBar/shoucang.png",
+	// 				"selectedIconPath": "static/tabBar/shoucang_active.png",
+	// 				"text": "收藏"
+	// 		}, {
+	// 				"pagePath": "pages/wode/index",
+	// 				"iconPath": "static/tabBar/wode.png",
+	// 				"selectedIconPath": "static/tabBar/wode_active.png",
+	// 				"text": "我的"
+	// 		}]
+	// },
+	"condition" : { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [
+			{
+				"name": "", //模式名称
+				"path": "", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			}
+		]
 	}
 }

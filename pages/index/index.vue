@@ -1,23 +1,19 @@
 <template>
 	<view class="container">
-		<view class="page">
-			<view class="list">
-				<view v-for="(item, index) in list" :key="index" class="item" @click="navToDetailPage(item)">
-					<view class="image-item"><image :src="item.ImgUrl"></image></view>
-					<view class="block">
-						<view class="title">{{ item.GoodsName }}</view>
-						<view class="between">
-							<view class="ActMoney">{{ item.ActMoney }}元券</view>
-							<view class="SaleCount">月销 {{ item.SaleCount }}</view>
-						</view>
-						<view class="between">
-							<view class="LastPrice">
-								券后￥
-								<text class="big">{{ item.LastPrice }}</text>
-							</view>
-							<view class="GoodsPrice">原价￥{{ item.GoodsPrice }}</view>
-						</view>
+		<view class="item" v-for="(item, index) in list" :key="index" @click="navToDetailPage(item)">
+			<image style="height: 350rpx;" :src="item.ImgUrl"></image>
+			<view style="padding: 0 5px;">
+				<view class="font-size-16">{{ item.GoodsName }}</view>
+				<view class="between" style="padding: 5px 0;">
+					<view class="red-block">{{ item.ActMoney }}元券</view>
+					<view class="darkgray">月销 {{ item.SaleCount }}</view>
+				</view>
+				<view class="between" style="padding: 0 0 5px;">
+					<view class="red">
+						券后￥
+						<text class="font-size-20">{{ item.LastPrice }}</text>
 					</view>
+					<view class="decoration">原价￥{{ item.GoodsPrice }}</view>
 				</view>
 			</view>
 		</view>
@@ -25,8 +21,8 @@
 		<movable-area>
 			<movable-view :x="x" :y="y" direction="all" @change="onChange" @click="navToChatPage">
 				<view class="icon">
-					<image class="robot" src="../../static/img/robot.jpg"></image>
-					<view>小黄鸡</view>
+					<image class="robot" src="/static/img/robot.jpg"></image>
+					<view>机器人</view>
 				</view>
 			</movable-view>
 		</movable-area>
@@ -58,9 +54,8 @@ export default {
 	mounted() {},
 	destroyed() {},
 	methods: {
+		// 查询数据
 		async queryData() {
-			// async await 包裹promise
-			// 这里写法就多了：接收变量(判断条件) / .then的写法都行
 			await this.requestPromise()
 				.then(res => {
 					console.log('success', res);
@@ -71,7 +66,6 @@ export default {
 				});
 		},
 		requestPromise() {
-			// 把回调封装成promise形式
 			return new Promise((resolve, reject) => {
 				uni.request({
 					url: 'http://api.xuandan.com/DataApi/index?AppKey=1yt5mfwx15&type=6',
@@ -90,10 +84,9 @@ export default {
 		},
 		//详情页
 		navToDetailPage(item) {
-			//测试数据没有写id，用title代替
 			let id = item.GoodsId;
 			uni.navigateTo({
-				url: `/pages/detail/detail?id=${id}`
+				url: `/pages/detail/index?id=${id}`
 			});
 		},
 		onChange: function(e) {
@@ -102,87 +95,32 @@ export default {
 		},
 		navToChatPage() {
 			uni.navigateTo({
-				url: `/pages/chat/chat`
+				url: `/pages/robot/index`
 			});
 		}
 	}
 };
 </script>
 
-<style scoped lang="less">
-@import url('../../mixin.less');
-.list {
+<style lang="less" scoped>
+.container {
+	padding: 0 3px;
 	.item {
 		float: left;
-		padding: 5px;
+		padding: 3px;
 		width: 50%;
 		background-color: white;
 		background-clip: content-box;
-	}
-}
-.image-item {
-	width: 100%;
-	height: 175px;
-	border-radius: 5px 5px 0 0;
-	overflow: hidden;
-	image {
-		width: 100%;
-		height: 100%;
-		opacity: 1;
-	}
-}
-.image-banner {
-	position: relative;
-	width: 100%;
-	height: 0;
-	padding-top: 100%;
-	image {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-	}
-}
-.block {
-	padding: 0 5px;
-	.title {
-		height: 38px;
-		overflow: hidden;
-	}
-	.between {
-		display: flex;
-		justify-content: space-between;
-		padding: 6rpx 0;
-
-		.ActMoney {
-			background: red;
-			color: white;
-			padding: 0 5px;
-			border-radius: 5px;
-		}
-		.SaleCount {
-			color: darkgray;
-		}
-		.LastPrice {
-			color: red;
-		}
-		.GoodsPrice {
-			text-decoration: line-through;
-		}
-		.big {
-			font-size: 22px;
-		}
 	}
 }
 
 movable-area {
 	position: absolute;
 	top: 0;
-    right: 0;
-    height: 667px;
-    width: 13%;
-    overflow: hidden;
+	right: 0;
+	height: 667px;
+	width: 13%;
+	overflow: hidden;
 	movable-view {
 		width: 50px;
 		height: 50px;

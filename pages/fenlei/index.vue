@@ -2,7 +2,7 @@
 	<view class="container between">
 		<!-- 左侧分类导航 -->
 		<scroll-view scroll-y="true" class="left">
-			<view :class="[category.id == showCategoryIndex ? 'red bold' : '']"
+			<view :class="[category.id == showCategoryIndex ? 'bg-red bold' : '']"
 			 v-for="(category, index) in categoryList" 
 			 :key="category.id"
 			 @click="showCategory(category.id)">
@@ -17,7 +17,7 @@
 			<view class="item" v-for="(item, index) in list" :key="index" @click="navToDetailPage(item)">
 				<image style="height: 350rpx;" :src="item.ImgUrl"></image>
 				<view style="padding: 0 5px;">
-					<view class="font-size-16" style="height: 42px;">{{ item.GoodsName }}</view>
+					<view class="font-size-16" style="height: 60px;">{{ item.GoodsName }}</view>
 					<view class="between" style="padding: 5px 0;">
 						<view class="red-block">{{ item.ActMoney }}元券</view>
 						<view class="darkgray">月销 {{ item.SaleCount }}</view>
@@ -75,6 +75,13 @@ export default {
 			this.showCategoryIndex = id;
 			this.queryData(id)
 		},
+		//详情页
+		navToDetailPage(item) {
+			let id = item.GoodsId;
+			uni.navigateTo({
+				url: `/pages/detail/index?id=${id}`
+			});
+		},
 		// 查询数据
 		async queryData(cid) {
 			await this.requestPromise(cid)
@@ -86,7 +93,7 @@ export default {
 					console.log('error', e);
 				});
 		},
-		requestPromise(cid=0, page=1, pagesize=20) {
+		requestPromise(cid=1, page=1, pagesize=20) {
 			return new Promise((resolve, reject) => {
 				uni.request({
 					url: `http://api.xuandan.com/DataApi/index?appkey=1yt5mfwx15&page=${page}&SaleCount=0&YjRatio=0&cid=${cid}&pagesize=${pagesize}`,
@@ -121,6 +128,7 @@ export default {
 		top: 45px;
 		width: 25%;
 		text-align: center;
+		background-color: antiquewhite;
 		.text {
 			line-height: 50px;
 		}

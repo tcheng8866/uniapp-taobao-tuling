@@ -6,9 +6,11 @@
 			"path": "pages/fenlei/index"
 		}, {
 			"path": "pages/shoucang/index"
-		}, {
-			"path": "pages/wode/index"
-		}, {
+		},
+		// {
+		// 	"path": "pages/wode/index"
+		// },
+		{
 			"path": "pages/robot/index"
 		}, {
 			"path": "pages/detail/index"
@@ -41,13 +43,15 @@
 					"pagePath": "pages/shoucang/index",
 					"iconPath": "static/tabBar/shoucang.png",
 					"selectedIconPath": "static/tabBar/shoucang_active.png",
-					"text": "收藏"
-			}, {
-					"pagePath": "pages/wode/index",
-					"iconPath": "static/tabBar/wode.png",
-					"selectedIconPath": "static/tabBar/wode_active.png",
-					"text": "我的"
-			}]
+					"text": "解闷"
+			}
+			// , {
+			// 		"pagePath": "pages/wode/index",
+			// 		"iconPath": "static/tabBar/wode.png",
+			// 		"selectedIconPath": "static/tabBar/wode_active.png",
+			// 		"text": "我的"
+			// }
+			]
 	},
 	"condition" : { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)

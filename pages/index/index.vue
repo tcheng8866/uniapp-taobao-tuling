@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<uni-search-bar @input="doSearch($event)"></uni-search-bar>
 		<view class="item" v-for="(item, index) in list" :key="index" @click="navToDetailPage(item)">
 			<image style="height: 350rpx;" :src="item.ImgUrl"></image>
 			<view style="padding: 0 5px;">
@@ -18,7 +19,7 @@
 			</view>
 		</view>
 		<!-- 跳转图灵机器人聊天 -->
-		<movable-area>
+		<movable-area style="display: none;">
 			<movable-view :x="x" :y="y" direction="all" @change="onChange" @click="navToChatPage">
 				<view class="icon">
 					<image class="robot" src="/static/img/robot.jpg"></image>
@@ -54,9 +55,12 @@ export default {
 	mounted() {},
 	destroyed() {},
 	methods: {
+		doSearch(key) {
+			this.queryData(key)
+		},
 		// 查询数据
-		async queryData() {
-			await this.requestPromise()
+		async queryData(key) {
+			await this.requestPromise(key)
 				.then(res => {
 					console.log('success', res);
 					this.list = res.data.data;
@@ -65,10 +69,14 @@ export default {
 					console.log('error', e);
 				});
 		},
-		requestPromise() {
+		requestPromise(key) {
+			let url = 'http://api.xuandan.com/DataApi/index?AppKey=1yt5mfwx15&type=6'
+			if (key) {
+				url = url + '&key=' + key
+			}
 			return new Promise((resolve, reject) => {
 				uni.request({
-					url: 'http://api.xuandan.com/DataApi/index?AppKey=1yt5mfwx15&type=6',
+					url: url,
 					data: {},
 					success: res => {
 						resolve(res);

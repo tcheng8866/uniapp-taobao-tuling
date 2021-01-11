@@ -55,8 +55,8 @@ export default {
 	mounted() {},
 	destroyed() {},
 	methods: {
-		doSearch(key) {
-			this.queryData(key)
+		doSearch(e) {
+			this.queryData(e.value)
 		},
 		// 查询数据
 		async queryData(key) {
